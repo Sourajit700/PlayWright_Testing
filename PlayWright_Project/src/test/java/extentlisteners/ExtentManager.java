@@ -10,11 +10,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.microsoft.playwright.Page;
 
-import base.BaseTest;
-
-//import base.BaseTest;
-
-//import base.BaseTest;
+import BaseClass.BaseClass;
 
 public class ExtentManager {
 
@@ -43,7 +39,7 @@ public class ExtentManager {
 		Date d = new Date();
 		fileName = d.toString().replace(":", "_").replace(" ", "_") + ".jpg";
 
-		BaseTest.getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get("./reports/"+fileName)));
+		BaseClass.getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get("./reports/" + fileName)));
 	}
 
 	/*

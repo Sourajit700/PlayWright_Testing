@@ -1,17 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.w2a</groupId>
-  <artifactId>DataDrivenFramework</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
-  
-    <properties>
-	
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>PlayWright_Project</groupId>
+	<artifactId>PlayWright_Project</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
-	
-<build>
+
+	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -20,8 +20,8 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			
-			
+
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -39,17 +39,17 @@
 
 
 			</plugin>
-			
-			
+
+
 		</plugins>
 	</build>
 
 
 	<dependencies>
-	
-	
-	
-	<!-- POI JARS STARTS -->
+
+
+
+		<!-- POI JARS STARTS -->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
 		<dependency>
@@ -94,8 +94,8 @@
 		</dependency>
 
 		<!-- POI JARS ENDS -->
-	
-	
+
+
 
 
 		<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
@@ -140,12 +140,6 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-	<dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.13.2</version>
-    <scope>test</scope>
-</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.microsoft.playwright/playwright -->
 		<dependency>
@@ -153,7 +147,42 @@
 			<artifactId>playwright</artifactId>
 			<version>1.25.0</version>
 		</dependency>
+		<dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-java</artifactId>
+        <version>7.14.0</version>
+    </dependency>
+
+    <!-- Cucumber JUnit -->
+    <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-junit</artifactId>
+        <version>7.14.0</version>
+        <scope>test</scope>
+    </dependency>
+
+    <!-- JUnit -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.13.2</version>
+        <scope>test</scope>
+    </dependency>
+
+    <!-- Cucumber JVM: Dependency Injection for PicoContainer (optional, used in step definitions) -->
+    <dependency>
+        <groupId>io.cucumber</groupId>
+        <artifactId>cucumber-picocontainer</artifactId>
+        <version>7.14.0</version>
+        <scope>test</scope>
+    </dependency>
+
+    <!-- Selenium (optional, but needed if you're testing via browser) -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+        <version>4.20.0</version>
+    </dependency>
 
 	</dependencies>
-  
 </project>
