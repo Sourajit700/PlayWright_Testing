@@ -3,16 +3,19 @@ package BaseClass;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.junit.BeforeClass;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Page.WaitForSelectorOptions;
@@ -20,18 +23,20 @@ import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.options.SelectOption;
 
 import extentlisteners.ExtentListeners;
+import utilities.ExcelReader;
 
 public class BaseClass {
-	private Playwright playwright;
-	public Browser browser;
-	public Page page;
+	private static Playwright playwright;
+	private static Browser browser;
+	public static Page page;
 	private static Properties OR = new Properties();
 	private static FileInputStream fis;
 	private Logger log = Logger.getLogger(this.getClass());
-
+	private static Properties prop;
 	private static ThreadLocal<Playwright> pw = new ThreadLocal<>();
 	private static ThreadLocal<Browser> br = new ThreadLocal<>();
 	private static ThreadLocal<Page> pg = new ThreadLocal<>();
+	private static BrowserContext context;
 
 	public BaseClass(Page page) {
 		this.page = page;
@@ -72,6 +77,19 @@ public class BaseClass {
 			e.printStackTrace();
 		}
 
+	}
+
+	@BeforeClass
+	public static String loadConfig(String key) throws IOException {
+		try {
+			FileInputStream fis = new FileInputStream(
+					".\\src\\test\\resources\\resources\\properties\\config.properties");
+			prop = new Properties();
+			prop.load(fis);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return prop.getProperty(key);
 	}
 
 	public void click(String locatorKey) {
@@ -136,29 +154,50 @@ public class BaseClass {
 		}
 	}
 
-	public Browser getBrowser(String browserName) {
-
+	public static void getBrowser(String browserName, String url) {
 		playwright = Playwright.create();
-		pw.set(playwright);
 
-		switch (browserName) {
+		// Launch the browser based on the provided browser name
+		switch (browserName.toLowerCase()) {
 		case "chrome":
-			log.info("Launching Chrome browser");
-			return getPlaywright().chromium()
+			browser = playwright.chromium()
 					.launch(new BrowserType.LaunchOptions().setChannel("chrome").setHeadless(false));
-		case "headless":
-			log.info("Launching Headless Mode");
-			return getPlaywright().chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+			break;
+		case "edge":
+			browser = playwright.chromium()
+					.launch(new BrowserType.LaunchOptions().setChannel("msedge").setHeadless(false));
+			break;
 		case "firefox":
-			log.info("Launching Firefox browser");
-			return getPlaywright().firefox()
-					.launch(new BrowserType.LaunchOptions().setChannel("firefox").setHeadless(false));
-		case "webkit":
-			log.info("Launching Webkit browser");
-			return getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(false));
+			browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+			break;
 		default:
-			throw new IllegalArgumentException();
+			throw new RuntimeException("Unsupported browser: " + browserName);
+		}
 
+		// Create a new context and page for the browser
+		context = browser.newContext();
+		page = context.newPage();
+
+		// Navigate to the specified URL
+		page.navigate(url);
+
+	}
+
+	public static Map<String, String> dataTable(String folderName, String fileName, String testCaseId) {
+		try {
+			String path = System.getProperty("user.dir") + "/src/test/resources/resources/" + folderName + "/" + fileName;
+			Map<String, String> rowData = ExcelReader.getTestData(path, testCaseId);
+
+			if (rowData == null || rowData.isEmpty()) {
+				System.out.println(" No data found for test case ID: " + testCaseId);
+			} else {
+				System.out.println(" Data loaded for " + testCaseId + ": " + rowData);
+			}
+
+			return rowData;
+
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to load Excel data: " + e.getMessage(), e);
 		}
 
 	}
@@ -195,11 +234,11 @@ public class BaseClass {
 	@AfterMethod
 	public void quit() {
 
-		if (getPage() != null) {
-			getBrowser().close();
-			getPage().close();
-			// getPlaywright().close();
-		}
+//		if (getPage() != null) {
+//			getBrowser().close();
+//			getPage().close();
+//			// getPlaywright().close();
+//		}
 	}
 
 	@AfterSuite

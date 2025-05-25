@@ -6,12 +6,12 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/java", // path to .feature files
-		glue = { "Web.Step_Defination" }, // package with step definitions
+		glue = { "Step_Definations" }, // package with step definitions
 		plugin = { "pretty", "summary", "html:target/cucumber-report.html",
 				"json:target/cucumber-report.json" }, 
 		monochrome = true, 
 		dryRun = false, 
-		tags = "@tag01")
+		tags = "@tag001")
 public class TestRunner {
 
 }
